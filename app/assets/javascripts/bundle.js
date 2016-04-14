@@ -70,20 +70,31 @@
 	var Main = function (_React$Component) {
 	  _inherits(Main, _React$Component);
 	
-	  function Main() {
+	  function Main(props) {
 	    _classCallCheck(this, Main);
 	
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(Main).apply(this, arguments));
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Main).call(this, props));
+	
+	    _this.state = { tweetsList: [] };
+	    return _this;
 	  }
 	
 	  _createClass(Main, [{
+	    key: 'addTweet',
+	    value: function addTweet(tweetToAdd) {
+	      var newTweetsList = this.state.tweetsList;
+	      newTweetsList.unshift({ id: Date.now(), name: 'random name', body: tweetToAdd });
+	
+	      this.setState({ tweetsList: newTweetsList });
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
 	      return React.createElement(
 	        'div',
 	        { className: 'container' },
-	        React.createElement(_TweetBox2.default, null),
-	        React.createElement(_TweetList2.default, null)
+	        React.createElement(_TweetBox2.default, { sendTweet: this.addTweet.bind(this) }),
+	        React.createElement(_TweetList2.default, { tweets: this.state.tweetsList })
 	      );
 	    }
 	  }]);
@@ -129,6 +140,13 @@
 	  }
 	
 	  _createClass(TweetBox, [{
+	    key: "sendTweet",
+	    value: function sendTweet(event) {
+	      event.preventDefault();
+	      this.props.sendTweet(this.refs.tweetTextArea.value);
+	      this.refs.tweetTextArea.value = "";
+	    }
+	  }, {
 	    key: "render",
 	    value: function render() {
 	      return React.createElement(
@@ -136,11 +154,11 @@
 	        { className: "row" },
 	        React.createElement(
 	          "form",
-	          null,
+	          { onSubmit: this.sendTweet.bind(this) },
 	          React.createElement(
 	            "div",
 	            { className: "input-field" },
-	            React.createElement("textarea", { className: "materialize-textarea" }),
+	            React.createElement("textarea", { ref: "tweetTextArea", className: "materialize-textarea" }),
 	            React.createElement(
 	              "label",
 	              null,
@@ -148,7 +166,7 @@
 	            ),
 	            React.createElement(
 	              "button",
-	              { className: "btn right" },
+	              { type: "submit", className: "btn right" },
 	              "Tweet"
 	            )
 	          )
@@ -174,6 +192,8 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
@@ -201,15 +221,16 @@
 	  _createClass(TweetList, [{
 	    key: "render",
 	    value: function render() {
+	      var tweets = this.props.tweets.map(function (tweet) {
+	        return React.createElement(_Tweet2.default, _extends({ key: tweet.id }, tweet));
+	      });
 	      return React.createElement(
 	        "div",
 	        null,
 	        React.createElement(
 	          "ul",
 	          { className: "collection" },
-	          React.createElement(_Tweet2.default, null),
-	          React.createElement(_Tweet2.default, null),
-	          React.createElement(_Tweet2.default, null)
+	          tweets
 	        )
 	      );
 	    }
@@ -264,12 +285,12 @@
 	        React.createElement(
 	          "span",
 	          { className: "title" },
-	          "Test User"
+	          this.props.name
 	        ),
 	        React.createElement(
 	          "p",
 	          null,
-	          "this is a tweet"
+	          this.props.body
 	        )
 	      );
 	    }

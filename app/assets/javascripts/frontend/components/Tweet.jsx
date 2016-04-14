@@ -3,9 +3,9 @@ export default class Tweet extends React.Component {
     return (
       <li className="collection-item avatar">
         <i className="material-icons circle">person_pin</i>
-        <span className="title">Test User</span>
+        <span className="title">{this.props.name}</span>
         <p>
-          this is a tweet
+          {this.props.body}
         </p>
       </li>
     )
