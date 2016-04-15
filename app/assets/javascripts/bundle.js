@@ -295,15 +295,17 @@
 	      return React.createElement(
 	        "li",
 	        { className: "collection-item avatar" },
-	        React.createElement(
-	          "i",
-	          { className: "material-icons circle" },
-	          "person_pin"
-	        ),
+	        React.createElement("img", { className: "circle", src: this.props.gravatar }),
 	        React.createElement(
 	          "span",
 	          { className: "title" },
-	          this.props.name
+	          this.props.name,
+	          " "
+	        ),
+	        React.createElement(
+	          "time",
+	          null,
+	          this.props.created_at
 	        ),
 	        React.createElement(
 	          "p",
